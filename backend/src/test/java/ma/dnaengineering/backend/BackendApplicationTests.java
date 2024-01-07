@@ -1,69 +1,71 @@
 package ma.dnaengineering.backend;
 
 import ma.dnaengineering.backend.model.Employee;
-import ma.dnaengineering.backend.service.CsvParserService;
-import ma.dnaengineering.backend.util.CsvParserUtil;
+import ma.dnaengineering.backend.services.CsvParserService;
+
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
-
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.mock.web.MockMultipartFile;
-
 import java.util.Arrays;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+/**
+ * Tests for the BackendApplication functionality.
+ */
 @SpringBootTest
 class BackendApplicationTests {
 
-	@Autowired
-	private CsvParserService csvParserService;
-	@Test
-	void testParseCsvAndReturnList() {
-		// Arrange
-		MultipartFile file = new MockMultipartFile("data", "filename.csv", "text/plain", "id,employee_name,job_title,salary\n1,John Doe,Developer,60000\n2,Jane Doe,Manager,80000".getBytes());
+    @Autowired
+    private CsvParserService csvParserService;
 
-		// Act
-		List<Employee> result = csvParserService.parseCsvAndReturnList(file);
+    /**
+     * Test the CSV parsing and employee list generation functionality.
+     */
+    @Test
+    void testParseCsvAndReturnList() {
+        // Arrange
+        MultipartFile file = new MockMultipartFile("data", "filename.csv", "text/plain",
+                "id,employee_name,job_title,salary\n1,Jon Ball,Mobile App Developer,7348.0\n2,Lindsey Young,Project Manager (IT),1499.0".getBytes());
 
-		// Assert
-		assertEquals(2, result.size());
-		assertEquals("John Doe", result.get(0).getName());
-		assertEquals("Developer", result.get(0).getJobTitle());
-		assertEquals(60000, result.get(0).getSalary());
-	}
+        // Act
+        List<Employee> result = csvParserService.parseCsvAndReturnListEmployees(file);
 
-	@Test
-	void testCalculateAverageSalary() {
-		List<Employee> employees = Arrays.asList(
-				new Employee(1, "John Doe", "Developer", 60000.0),
-				new Employee(2, "Jane Doe", "Developer", 70000.0),
-				new Employee(3, "Bob Smith", "Manager", 80000.0)
-		);
+        // Assert
+        assertEquals(2, result.size());
+        assertEquals("Jon Ball", result.get(0).getEmployeeName());
+        assertEquals("Mobile App Developer", result.get(0).getJobTitle());
+        assertEquals(7348.0, result.get(0).getSalary());
+    }
 
-		// Act
-		Map<String, Double> averageSalaries = csvParserService.calculateAverageSalary(employees);
+    /**
+     * Test the calculation of average salaries based on job titles.
+     */
+    @Test
+    void testCalculateAverageSalary() {
+        // Arrange
+        List<Employee> employees = Arrays.asList(
+                new Employee(1, "Kimberly Allen", "IT Support Specialist", 13428.0),
+                new Employee(2, "Jason Johnson", "IT Support Specialist", 10087.0),
+                new Employee(3, "John Griffin", "Systems Administrator",7397.0)
+        );
 
-		// Assert
-		assertEquals(2, averageSalaries.size());
-		assertEquals(65000.0, averageSalaries.get("Developer"));
-		assertEquals(80000.0, averageSalaries.get("Manager"));
-	}
+        // Act
+        Map<String, Double> averageSalaries = csvParserService.calculateAverageSalary(employees);
 
-	@Test
-	void contextLoads() {
-	}
+        // Assert
+        assertEquals(2, averageSalaries.size());
+        assertEquals(11,757.5, averageSalaries.get("Developer"));
+        assertEquals(7397.0, averageSalaries.get("Systems Administrator"));
+    }
+
+    /**
+     * Test to ensure that the application context loads successfully.
+     */
+    @Test
+    void contextLoads() {
+    }
 }
