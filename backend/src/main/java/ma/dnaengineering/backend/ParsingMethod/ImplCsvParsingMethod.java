@@ -1,7 +1,8 @@
-package ma.dnaengineering.backend.util;
+package ma.dnaengineering.backend.ParsingMethod;
 
 import ma.dnaengineering.backend.model.Employee;
 import ma.dnaengineering.backend.model.JobSummary;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
@@ -17,12 +18,14 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CsvParser {
+@Service
+public class ImplCsvParsingMethod implements CsvParsingMethod {
 
-    private static final Logger LOGGER = Logger.getLogger(CsvParser.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ImplCsvParsingMethod.class.getName());
 
     private static final int SCALE = 2; // 2 chiffres après la virgule
 
+    @Override
     public List<Employee> parseEmployees(MultipartFile file) throws IOException {
         List<Employee> employees = new ArrayList<>();
 
@@ -50,15 +53,7 @@ public class CsvParser {
         return employees;
     }
 
-    private boolean isValidSalary(String salary) {
-        try {
-            Double.parseDouble(salary);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
+    @Override
     public List<JobSummary> calculateJobSummary(List<Employee> employees) {
         Map<String, BigDecimal> jobTitleTotalSalary = new HashMap<>();
         Map<String, Integer> jobTitleCount = new HashMap<>();
@@ -80,12 +75,15 @@ public class CsvParser {
 
             JobSummary jobSummary = new JobSummary();
             jobSummary.setJobTitle(jobTitle);
-            jobSummary.setAverageSalary(averageSalary.doubleValue()); // Convertir en double
+            jobSummary.setAverageSalary(averageSalary.doubleValue()); // Convert to double
             jobSummaries.add(jobSummary);
         }
 
         return jobSummaries;
     }
+
+
+    @Override
     public List<String[]> parse(InputStream inputStream) throws IOException {
         List<String[]> rows = new ArrayList<>();
 
@@ -101,5 +99,14 @@ public class CsvParser {
         }
 
         return rows;
+    }
+
+    private boolean isValidSalary(String salary) {
+        try {
+            Double.parseDouble(salary);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }
