@@ -20,7 +20,7 @@ import java.util.Map;
 class BackendApplicationTests {
 
     @Autowired
-    private CsvParserService csvParserService;
+    private CsvParserService csv;
 
     /**
      * Test the CSV parsing and employee list generation functionality.
@@ -32,7 +32,7 @@ class BackendApplicationTests {
                 "id,employee_name,job_title,salary\n1,Jon Ball,Mobile App Developer,7348.0\n2,Lindsey Young,Project Manager (IT),1499.0".getBytes());
 
         // Act
-        List<Employee> result = csvParserService.parseCsvAndReturnListEmployees(file);
+        List<Employee> result = csv.parseCsvAndReturnList(file);
 
         // Assert
         assertEquals(2, result.size());
@@ -54,7 +54,7 @@ class BackendApplicationTests {
         );
 
         // Act
-        Map<String, Double> averageSalaries = csvParserService.calculateAverageSalary(employees);
+        Map<String, Double> averageSalaries = csv.calculateAverageSalary(employees);
 
         // Assert
         assertEquals(2, averageSalaries.size());

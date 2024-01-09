@@ -1,4 +1,4 @@
-package ma.dnaengineering.backend.Controller;
+package ma.dnaengineering.backend.Controllers;
 
 import ma.dnaengineering.backend.model.Employee;
 import ma.dnaengineering.backend.services.CsvParserService;
@@ -16,15 +16,15 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/csv")
 public class CsvController {
-    private final CsvParserService csvParserService;
+    private  CsvParserService csvService;
 
     /**
      * Constructor for CsvController.
      *
      * @param csvParserService The service responsible for CSV parsing and processing.
      */
-    public CsvController(CsvParserService csvParserService) {
-        this.csvParserService = csvParserService;
+    public CsvController(CsvParserService csvService) {
+        this.csvService = csvService;
     }
 
     /**
@@ -36,7 +36,7 @@ public class CsvController {
     @PostMapping("/upload")
     public ResponseEntity<List<Employee>> parseCsvAndReturnList(@RequestParam("file") MultipartFile file) {
         // Parse CSV file and get the list of employees
-        List<Employee> employees = csvParserService.parseCsvAndReturnListEmployees(file);
+        List<Employee> employees = csvService.parseCsvAndReturnList(file);
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
 
@@ -49,10 +49,10 @@ public class CsvController {
     @PostMapping("/summary")
     public ResponseEntity<Map<String, Double>> getAverageSalarySummary(@RequestParam("file") MultipartFile file) {
         // Parse CSV file and get the list of employees
-        List<Employee> employees = csvParserService.parseCsvAndReturnListEmployees(file);
+        List<Employee> employees = csvService.parseCsvAndReturnList(file);
 
         // Calculate average salary summary based on job titles
-        Map<String, Double> averageSalaryMap = csvParserService.calculateAverageSalary(employees);
+        Map<String, Double> averageSalaryMap = csvService.calculateAverageSalary(employees);
 
         return new ResponseEntity<>(averageSalaryMap, HttpStatus.OK);
     }

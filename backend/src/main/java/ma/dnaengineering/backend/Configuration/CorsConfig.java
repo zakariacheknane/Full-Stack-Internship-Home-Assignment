@@ -11,6 +11,8 @@ public class CorsConfig {
 
     @Bean
     public CorsFilter corsFilter() {
+    	   // Create a source with the specified configuration for all paths
+    	UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         // Create a configuration for CORS
         CorsConfiguration config = new CorsConfiguration();
 
@@ -22,9 +24,7 @@ public class CorsConfig {
 
         // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
         config.addAllowedMethod("*");
-
-        // Create a source with the specified configuration for all paths
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+  
         source.registerCorsConfiguration("/**", config);
 
         // Create and return a CorsFilter using the configuration source

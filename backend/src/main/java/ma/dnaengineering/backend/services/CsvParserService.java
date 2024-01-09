@@ -18,7 +18,7 @@ public class CsvParserService {
     * @param file The CSV file to be parsed.
     * @return A list of employee objects.
     */
-    public List<Employee> parseCsvAndReturnListEmployees(MultipartFile file) {
+    public List<Employee> parseCsvAndReturnList(MultipartFile file) {
     	// Read CSV data from the file using CsvParserUtil
         List<String[]> csvData = CsvParserUtil.readCsvData(file);
      // Skip the header row and map each CSV row to an Employee object
